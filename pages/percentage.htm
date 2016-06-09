@@ -1,0 +1,69 @@
+<h1>SECOND PAGE</h1>
+
+<a href="#/" type="button" class="btn btn-primary">Back to percent page</a>
+
+<hr>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-6 sidebar">
+      <div class="fixed">
+        <form role="form">
+          <div class="form-group">
+            <div class="col-md-12">
+              <label>Select the country:</label>
+              <select ng-model="percent.countryCode" ng-change="percent.getData()" class="form-control">
+                <option value="IN">India</option>
+                <option value="UK">United Kingdom</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+              </select>
+            </div>
+            <div class="col-md-12">
+              <label>Select year one:</label>
+              <select ng-model="percent.year1" ng-change="percent.getData()" class="form-control">
+                <option value="2010">2010</option>
+                <option value="2011">2011</option>
+                <option value="2012">2012</option>
+                <option value="2013">2013</option>
+                <option value="2014">2014</option>
+              </select>
+            </div>
+            <div class="col-md-12">
+              <label>Select year two:</label>
+              <select ng-model="percent.year2" ng-change="percent.getData()" class="form-control">
+                <option value="2010">2010</option>
+                <option value="2011">2011</option>
+                <option value="2012">2012</option>
+                <option value="2013">2013</option>
+                <option value="2014">2014</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Age</th>
+            <th>Year 1</th>
+            <th>Year 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="a in percent.data1" ng-repeat="b in percent.data2">
+            <td>{{a['2']}}</td>
+            <td>{{a['3']}}</td>
+            <td>{{b['3']}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
