@@ -1,7 +1,4 @@
-<h1>SECOND PAGE</h1>
-
-<a href="#/" type="button" class="btn btn-primary">Back to percent page</a>
-
+<h2>Population Inc/Dec for {{percent.country}} from year {{percent.year1}} to {{percent.year2}}</h2>
 <hr>
 
 <div class="container">
@@ -52,13 +49,15 @@
             <th>Age</th>
             <th>Year 1</th>
             <th>Year 2</th>
+            <th>&#37; Diff</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="a in percent.data1" ng-repeat="b in percent.data2">
-            <td>{{a['2']}}</td>
-            <td>{{a['3']}}</td>
-            <td>{{b['3']}}</td>
+          <tr ng-repeat="a in percent.result">
+            <td>{{a['age']}}</td>
+            <td>{{a['pop1']}}</td>
+            <td>{{a['pop2']}}</td>
+            <td>{{a['percentageDiff'] | number : 2}}</td>
           </tr>
         </tbody>
       </table>

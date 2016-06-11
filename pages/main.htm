@@ -1,5 +1,5 @@
-<h1>MAIN PAGE</h1>
-<a href="#/second" type="button" class="btn btn-primary">Second Page</a>
+<h2 ng-if="main.myVar == true">Population Stats for {{main.gender}} in {{main.country}} for year {{main.year}}</h2>
+<h2 ng-if="main.myVar == false">Population Stats for {{main.country}} in year {{main.year}}</h2>
 
 <hr>
 
@@ -29,20 +29,30 @@
                 <option value="2014">2014</option>
               </select>
             </div>
+            <div class="col-md-12">
+              <label>Select the gender:</label>
+              <select ng-model="main.sex" ng-change="main.getData()" class="form-control">
+                <option value="0">Both</option>
+                <option value="1">Male</option>
+                <option value="2">Female</option>
+              </select>
+            </div>
           </div>
         </form>
       </div>
     </div>
 
     <div class="col-md-6">
-      <div class="col-md-12">
-        <ul class="list-group">
-          <li class="list-group-item" ng-repeat="x in main.data">
-            <span class="badge">{{x['3']}}</span>
-            {{x['2']}}
-          </li>
-        </ul>
-      </div>
+      <table class="table">
+        <thead>
+        </thead>
+        <tbody>
+          <tr ng-repeat="x in main.data">
+            <td>{{x['2']}}</td>
+            <td>{{x['3']}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </div>

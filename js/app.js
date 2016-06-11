@@ -22,9 +22,9 @@ populationHack.service('populationService', function($resource, $q){
   var ps = this;
 
   //main
-  ps.getMainData = function(country, year){
+  ps.getMainData = function(country, year, sex){
     var obj = $resource('http://api.census.gov/data/timeseries/idb/1year?get=AREA_KM2,NAME,AGE,POP&key=32af54f8e4ab4691f4f47722fce2a4a126a7f74b');
-    return obj.query({FIPS:country, time:year, SEX:0});
+    return obj.query({FIPS:country, time:year, SEX:sex});
   }
 
   //percent
@@ -39,26 +39,26 @@ populationHack.service('populationService', function($resource, $q){
         console.log(result2);
 
         ps.resultArr = [];
-        for(var i=0; i<result1.length; i++)
+        for(var i=1; i<result1.length; i++)
         { var obj = {};
-          obj.age = result1['2'];
-          obj.pop1 = result1['3'];
-          obj.pop2 = result2['3'];
-          obj.diffPop = obj.pop2 - obj.pop1;
-          obj.percentageDiff = (obj.diffPop/obj.pop1)*100;
+        obj.age = result1[i]['2'];
+        // console.log(obj.age);
+        obj.pop1 = result1[i]['3'];
+        obj.pop2 = result2[i]['3'];
+        obj.diffPop = obj.pop2 - obj.pop1;
+        obj.percentageDiff = (obj.diffPop/obj.pop1)*100;
 
-          ps.resultArr.push(obj);
-        }
-        deferred.resolve(ps.resultArr);
-      },function(err){
-        console.log("Error");
-      })
+        ps.resultArr.push(obj);
+      }
+      deferred.resolve(ps.resultArr);
     },function(err){
       console.log("Error");
-    });
-    return deferred.promise;
-  }
-
+    })
+  },function(err){
+    console.log("Error");
+  });
+  return deferred.promise;
+}
 
 });
 
@@ -68,11 +68,45 @@ populationHack.controller('mainController', ['$scope', '$resource', 'populationS
 
   main.countryCode = 'IN';
   main.year = '2010';
+  main.sex = '0';
+
+  //headers
+  main.country = 'India';
+  main.gender = 'Men';
+  main.myVar = false;
 
   main.getData = function(){
-    main.data = populationService.getMainData(main.countryCode,main.year);
+    main.data = populationService.getMainData(main.countryCode,main.year,main.sex);
     console.log("Inside Getdata");
     console.log(main.data);
+
+    //for headers
+    (function(countryCode, sex){
+      if(main.sex == 1){
+        main.gender = 'Men';
+        main.myVar = true;
+      }
+      else if(main.sex == 2){
+        main.gender = 'Women';
+        main.myVar = true;
+      }
+      else{
+        main.myVar = false;
+      }
+
+      if(main.countryCode == 'IN'){
+        main.country = 'India';
+      }
+      else if(main.countryCode == 'UK'){
+        main.country = 'United Kingdom';
+      }
+      else if(main.countryCode == 'US'){
+        main.country = 'United States';
+      }
+      else if(main.countryCode == 'CA'){
+        main.country = 'Canada';
+      }
+    })();
   };
   main.getData();
 
@@ -84,8 +118,11 @@ populationHack.controller('percentController', ['$scope', '$resource', 'populati
   percent.countryCode = 'IN';
   percent.year1 = '2010';
   percent.year2 = '2014';
+  percent.country = 'USA';
+  console.log(percent.country);
 
   percent.getData = function(){
+    console.log("Inside Getdata");
     var response = populationService.getPercentData(percent.countryCode, percent.year1, percent.year2);
     response.then(function(data){
       percent.result = data;
@@ -93,8 +130,23 @@ populationHack.controller('percentController', ['$scope', '$resource', 'populati
     }, function(err){
       console.log("Error");
     });
-    console.log("Inside Getdata");
-  }
+
+    //headers
+    (function(countryCode){
+      if(percent.countryCode == 'IN'){
+        percent.country = 'India';
+      }
+      else if(percent.countryCode == 'UK'){
+        percent.country = 'United Kingdom';
+      }
+      else if(percent.countryCode == 'US'){
+        percent.country = 'United States';
+      }
+      else if(percent.countryCode == 'CA'){
+        percent.country = 'Canada';
+      }
+    })();
+  };
   percent.getData();
 
 }]);
