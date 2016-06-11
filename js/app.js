@@ -1,5 +1,5 @@
 //Modules
-var populationHack = angular.module('populationHack', ['ngRoute', 'ngResource']);
+var populationHack = angular.module('populationHack', ['ngRoute', 'ngResource', 'highcharts-ng']);
 
 //Routes
 populationHack.config(function($routeProvider){
@@ -21,19 +21,47 @@ populationHack.config(function($routeProvider){
 populationHack.service('populationService', function($resource, $q){
   var ps = this;
 
-  //main
-  ps.getMainData = function(country, year, sex){
+  ps.getData = function(country, year, sex){
+    if(sex == undefined){
+      sex = '0';
+    }
     var obj = $resource('http://api.census.gov/data/timeseries/idb/1year?get=AREA_KM2,NAME,AGE,POP&key=32af54f8e4ab4691f4f47722fce2a4a126a7f74b');
     return obj.query({FIPS:country, time:year, SEX:sex});
   }
 
+  //main
+  ps.getMainData = function(country, year, sex){
+    var resObj = ps.getData(country, year, sex);
+    var deferred = $q.defer();
+    resObj.$promise.then(function(result){
+      var resultArr = [];
+      result.splice(0,1);
+      console.log(result);
+
+      var chartArr = [];
+      for(i=0; i<result.length; i++){
+        chartArr.push(parseInt(result[i][3]));
+      }
+      console.log(chartArr);
+
+      resultArr.push(result);
+      resultArr.push(chartArr);
+      console.log(resultArr);
+
+      deferred.resolve(resultArr);
+    }, function(err){
+      console.log('Error');
+    });
+    return deferred.promise;
+  };
+
   //percent
   ps.getPercentData = function(country, year1, year2){
-    var resObj1 = ps.getMainData(country, year1);
+    var resObj1 = ps.getData(country, year1);
     var deferred = $q.defer();
     resObj1.$promise.then(function(result1){
       // Now we have result1
-      var resObj2 = ps.getMainData(country, year2);
+      var resObj2 = ps.getData(country, year2);
       resObj2.$promise.then(function(result2){
         console.log(result1);
         console.log(result2);
@@ -76,9 +104,48 @@ populationHack.controller('mainController', ['$scope', '$resource', 'populationS
   main.myVar = false;
 
   main.getData = function(){
-    main.data = populationService.getMainData(main.countryCode,main.year,main.sex);
+    var response = populationService.getMainData(main.countryCode, main.year, main.sex);
+    response.then(function(data){
+      var resultData = data;
+
+      main.data = resultData[0];
+      console.log(main.data);
+      main.chartArr = resultData[1];
+      console.log(main.chartArr);
+
+      //Charts
+      main.chartConfig = {
+        options: {
+          chart: {
+            type: 'column'
+          },
+          tooltip: {
+            style: {
+              padding: 10,
+              fontWeight: 'bold'
+            }
+          }
+        },
+        //Series object (optional) - a list of series using normal Highcharts series options.
+        series: [{
+          data: main.chartArr
+        }],
+        title: {
+          text: 'Population Graph'
+        },
+        loading: false,
+        yAxis: {
+          title: {text: 'Population'}
+        },
+        xAxis: {
+          title: {text: 'Age'}
+        }
+      };
+
+    }, function(err){
+      console.log('Error');
+    });
     console.log("Inside Getdata");
-    console.log(main.data);
 
     //for headers
     (function(countryCode, sex){
@@ -107,6 +174,7 @@ populationHack.controller('mainController', ['$scope', '$resource', 'populationS
         main.country = 'Canada';
       }
     })();
+
   };
   main.getData();
 
