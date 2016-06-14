@@ -10,16 +10,26 @@ populationHack.config(function($routeProvider){
     controller: 'mainController',
     controllerAs: 'main'
   })
-  .when('/second', {
+  .when('/percent', {
     templateUrl: 'pages/percentage.htm',
     controller: 'percentController',
     controllerAs: 'percent'
+  })
+  .when('/rawdata', {
+    templateUrl: 'pages/rawdata.htm',
+    controller: 'rawdataController',
+    controllerAs: 'rawdata'
   })
 });
 
 //Services
 populationHack.service('populationService', function($resource, $q){
   var ps = this;
+
+  //for rawdata
+  ps.rawData = null;
+  ps.flag = true;
+
 
   ps.getData = function(country, year, sex){
     if(sex == undefined){
@@ -66,27 +76,34 @@ populationHack.service('populationService', function($resource, $q){
         console.log(result1);
         console.log(result2);
 
-        ps.resultArr = [];
-        for(var i=1; i<result1.length; i++)
-        { var obj = {};
-        obj.age = result1[i]['2'];
-        // console.log(obj.age);
-        obj.pop1 = result1[i]['3'];
-        obj.pop2 = result2[i]['3'];
-        obj.diffPop = obj.pop2 - obj.pop1;
-        obj.percentageDiff = (obj.diffPop/obj.pop1)*100;
+        var resultArr = [];
+        var resultArr1 = [];
+        var resultArr2 = [];
 
-        ps.resultArr.push(obj);
-      }
-      deferred.resolve(ps.resultArr);
+        for(var i=1; i<result1.length; i++){
+          var obj = {};
+          obj.age = result1[i]['2'];
+          // console.log(obj.age);
+          obj.pop1 = result1[i]['3'];
+          obj.pop2 = result2[i]['3'];
+          obj.diffPop = obj.pop2 - obj.pop1;
+          obj.percentageDiff = (obj.diffPop/obj.pop1)*100;
+
+          resultArr1.push(obj);
+          resultArr2.push(obj.percentageDiff);
+        }
+        resultArr.push(resultArr1);
+        resultArr.push(resultArr2);
+
+        deferred.resolve(resultArr);
+      },function(err){
+        console.log("Error");
+      })
     },function(err){
       console.log("Error");
-    })
-  },function(err){
-    console.log("Error");
-  });
-  return deferred.promise;
-}
+    });
+    return deferred.promise;
+  }
 
 });
 
@@ -103,6 +120,7 @@ populationHack.controller('mainController', ['$scope', '$resource', 'populationS
   main.gender = 'Men';
   main.myVar = false;
 
+  //function
   main.getData = function(){
     var response = populationService.getMainData(main.countryCode, main.year, main.sex);
     response.then(function(data){
@@ -112,6 +130,10 @@ populationHack.controller('mainController', ['$scope', '$resource', 'populationS
       console.log(main.data);
       main.chartArr = resultData[1];
       console.log(main.chartArr);
+
+      //to get rawdata table
+      populationService.rawData = main.data;
+      populationService.flag = true;
 
       //Charts
       main.chartConfig = {
@@ -128,6 +150,7 @@ populationHack.controller('mainController', ['$scope', '$resource', 'populationS
         },
         //Series object (optional) - a list of series using normal Highcharts series options.
         series: [{
+          name: 'Show',
           data: main.chartArr
         }],
         title: {
@@ -186,15 +209,52 @@ populationHack.controller('percentController', ['$scope', '$resource', 'populati
   percent.countryCode = 'IN';
   percent.year1 = '2010';
   percent.year2 = '2014';
-  percent.country = 'USA';
-  console.log(percent.country);
 
   percent.getData = function(){
     console.log("Inside Getdata");
     var response = populationService.getPercentData(percent.countryCode, percent.year1, percent.year2);
     response.then(function(data){
-      percent.result = data;
-      console.log(percent.result);
+      var resultData = data;
+
+      percent.data = resultData[0];
+      console.log(percent.data);
+      percent.chartArr = resultData[1];
+      console.log(percent.chartArr);
+
+      //to get rawdata table
+      populationService.rawData = percent.data;
+      populationService.flag = false;
+
+      //Charts
+      percent.chartConfig = {
+        options: {
+          chart: {
+            type: 'column'
+          },
+          tooltip: {
+            style: {
+              padding: 10,
+              fontWeight: 'bold'
+            }
+          }
+        },
+        //Series object (optional) - a list of series using normal Highcharts series options.
+        series: [{
+          name: 'Show',
+          data: percent.chartArr
+        }],
+        title: {
+          text: '% Inc/Dec'
+        },
+        loading: false,
+        yAxis: {
+          title: {text: 'Population'}
+        },
+        xAxis: {
+          title: {text: 'Age'}
+        }
+      };
+
     }, function(err){
       console.log("Error");
     });
@@ -214,7 +274,19 @@ populationHack.controller('percentController', ['$scope', '$resource', 'populati
         percent.country = 'Canada';
       }
     })();
+
   };
   percent.getData();
+
+}]);
+
+populationHack.controller('rawdataController', ['$scope', '$resource', 'populationService', function($scope, $resource, populationService){
+  var rawdata = this;
+
+  rawdata.flag = populationService.flag;
+  console.log(rawdata.flag);
+
+  rawdata.data = populationService.rawData;
+  console.log(rawdata.data);
 
 }]);

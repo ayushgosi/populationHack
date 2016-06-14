@@ -1,0 +1,42 @@
+
+<hr>
+
+<!-- main -->
+<div class="col-md-6" ng-show="rawdata.flag">
+  <table class="table">
+    <thead>
+      <tr>
+        <td>Age</td>
+        <td>Population</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="x in rawdata.data">
+        <td>{{x['2']}}</td>
+        <td>{{x['3']}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- percent -->
+<div class="col-md-6" ng-hide="rawdata.flag">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Age</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>&#37; Diff</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="x in rawdata.data">
+        <td>{{x['age']}}</td>
+        <td>{{x['pop1']}}</td>
+        <td>{{x['pop2']}}</td>
+        <td>{{x['percentageDiff'] | number : 2}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -6,7 +6,7 @@
   <div class="col-md-4">
     <ul class="nav nav-tabs pull-right">
       <li role="presentation"><a href="#/" class="btn btn-primary">Population</a></li>
-      <li role="presentation"><a href="#/second" class="btn btn-primary">Percentage</a></li>
+      <li role="presentation"><a href="#/percent" class="btn btn-primary">Percentage</a></li>
     </ul>
   </div>
 </div>
@@ -19,72 +19,45 @@
 
     <div class="col-md-8">
 
-        <div class="row">
-          <form role="form">
-            <div class="form-group">
-
-              <div class="col-md-4">
-                <label>Select the country:</label>
-                <select ng-model="main.countryCode" ng-change="main.getData()" class="form-control">
-                  <option value="IN">India</option>
-                  <option value="UK">United Kingdom</option>
-                  <option value="US">United States</option>
-                  <option value="CA">Canada</option>
-                </select>
-              </div>
-              <div class="col-md-4">
-                <label>Select the year:</label>
-                <select ng-model="main.year" ng-change="main.getData()" class="form-control">
-                  <option value="2010">2010</option>
-                  <option value="2011">2011</option>
-                  <option value="2012">2012</option>
-                  <option value="2013">2013</option>
-                  <option value="2014">2014</option>
-                </select>
-              </div>
-              <div class="col-md-4">
-                <label>Select the gender:</label>
-                <select ng-model="main.sex" ng-change="main.getData()" class="form-control">
-                  <option value="0">Both</option>
-                  <option value="1">Male</option>
-                  <option value="2">Female</option>
-                </select>
-              </div>
+      <div class="row">
+        <form role="form">
+          <div class="form-group">
+            <div class="col-md-4">
+              <label>Select the country:</label>
+              <select ng-model="main.countryCode" ng-change="main.getData()" class="form-control">
+                <option value="IN">India</option>
+                <option value="UK">United Kingdom</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+              </select>
             </div>
-          </form>
-        </div>
-
-        <!-- <br>
-        <br> -->
-
-        <!-- <div class="row">
-          <div class="col-md-12">
-            <highchart id="chart1" config="main.chartConfig"></highchart>
+            <div class="col-md-4">
+              <label>Select the year:</label>
+              <select ng-model="main.year" ng-change="main.getData()" class="form-control">
+                <option value="2010">2010</option>
+                <option value="2011">2011</option>
+                <option value="2012">2012</option>
+                <option value="2013">2013</option>
+                <option value="2014">2014</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label>Select the gender:</label>
+              <select ng-model="main.sex" ng-change="main.getData()" class="form-control">
+                <option value="0">Both</option>
+                <option value="1">Male</option>
+                <option value="2">Female</option>
+              </select>
+            </div>
           </div>
-        </div> -->
+        </form>
+      </div>
 
     </div>
 
     <div class="col-md-4 text-center">
-      <a href="#/" id = "viewDataButton" class="btn btn-info">View Raw Data</a>
+      <a href="#/rawdata" id = "viewDataButton" ng-click="main.getData()" class="btn btn-info">View Raw Data</a>
     </div>
-
-    <!-- <div class="col-md-6">
-      <table class="table">
-        <thead>
-          <tr>
-            <td>Age</td>
-            <td>Population</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="x in main.data">
-            <td>{{x['2']}}</td>
-            <td>{{x['3']}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div> -->
 
   </div>
 
