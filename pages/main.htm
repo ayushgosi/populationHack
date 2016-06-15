@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-8">
-    <h3 ng-if="main.myVar == true">Population Stats for {{main.gender}} in {{main.country}} for year {{main.year}}</h3>
-    <h3 ng-if="main.myVar == false">Population Stats for {{main.country}} in year {{main.year}}</h3>
+    <h3 ng-if="main.myVar == true">Population Stats for {{main.gender}} in {{main.countryData.Name}} for year {{main.year}}</h3>
+    <h3 ng-if="main.myVar == false">Population Stats for {{main.countryData.Name}} in year {{main.year}}</h3>
   </div>
   <div class="col-md-4">
     <ul class="nav nav-tabs pull-right">
@@ -24,8 +24,8 @@
           <div class="form-group">
             <div class="col-md-4">
               <label>Select the country:</label>
-              <select ng-model="main.countryCode" ng-change="main.getData()" class="form-control">
-                <option ng-repeat="x in main.countryList" value="{{x.Code}}">{{x.Name}}</option>
+              <select ng-model="main.countryData" ng-change="main.getData()" class="form-control"
+              ng-options="country.Name for country in main.countryList track by country.Code">
               </select>
             </div>
             <div class="col-md-4">

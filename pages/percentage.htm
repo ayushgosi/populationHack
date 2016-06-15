@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-8">
-    <h3>Population Inc/Dec for {{percent.country}} from year {{percent.year1}} to {{percent.year2}}</h3>
+    <h3>Population Inc/Dec for {{percent.countryData.Name}} from year {{percent.year1}} to {{percent.year2}}</h3>
   </div>
   <div class="col-md-4">
     <ul class="nav nav-tabs pull-right">
@@ -22,8 +22,8 @@
         <div class="form-group">
           <div class="col-md-4">
             <label>Select the country:</label>
-            <select ng-model="percent.countryCode" ng-change="percent.getData()" class="form-control">
-              <option ng-repeat="x in percent.countryList" value="{{x.Code}}">{{x.Name}}</option>
+            <select ng-model="percent.countryData" ng-change="percent.getData()" class="form-control"
+            ng-options="country.Name for country in percent.countryList track by country.Code">
             </select>
           </div>
           <div class="col-md-4">
