@@ -1,4 +1,9 @@
 //Services
+populationHack.service('countryCodeService', function($resource){
+  return $resource('js/service/countryCodes.json');
+});
+
+
 populationHack.service('populationService', function($resource, $q){
   var ps = this;
 

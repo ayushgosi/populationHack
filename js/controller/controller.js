@@ -1,15 +1,23 @@
 //Controllers
-populationHack.controller('mainController', ['$scope', '$resource', 'populationService', function($scope, $resource, populationService){
+populationHack.controller('mainController', ['$scope', '$resource', 'countryCodeService', 'populationService', function($scope, $resource, countryCodeService, populationService){
   var main = this;
 
   main.countryCode = 'IN';
-  main.year = '2010';
+  main.year = '2016';
   main.sex = '0';
 
   //headers
   main.country = 'India';
   main.gender = 'Men';
   main.myVar = false;
+
+  //country list
+  main.countryList = countryCodeService.query(function(data){
+    console.log(main.countryList);
+  });
+
+  //year list
+  main.years = [2010, 2011, 2012, 2013, 2014, 2015, 2016];
 
   //function
   main.getData = function(){
@@ -94,13 +102,22 @@ populationHack.controller('mainController', ['$scope', '$resource', 'populationS
 
 }]);
 
-populationHack.controller('percentController', ['$scope', '$resource', 'populationService', function($scope, $resource, populationService){
+populationHack.controller('percentController', ['$scope', '$resource', 'countryCodeService', 'populationService', function($scope, $resource, countryCodeService, populationService){
   var percent = this;
 
   percent.countryCode = 'IN';
-  percent.year1 = '2010';
-  percent.year2 = '2014';
+  percent.year1 = '2015';
+  percent.year2 = '2016';
 
+  //country list
+  percent.countryList = countryCodeService.query(function(data){
+    console.log(percent.countryList);
+  });
+
+  //year list
+  percent.years = [2010, 2011, 2012, 2013, 2014, 2015, 2016];
+
+  //function
   percent.getData = function(){
     console.log("Inside Getdata");
     var response = populationService.getPercentData(percent.countryCode, percent.year1, percent.year2);
